@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
-import { confirmationSubject, confirmationHtml } from "@/emails/confirmationTemplate";
+import {
+  confirmationSubject,
+  confirmationHtml,
+} from "@/emails/confirmationTemplate";
 import { adminSubject, adminHtml } from "@/emails/adminNotificationTemplate";
 
 const ADMIN_EMAIL = "noreply@operationprofitllc.com";
-const FROM_ADDRESS = "Operation Profit Asset Recovery <recovery@operationprofitllc.com>";
+const FROM_ADDRESS =
+  "Operation Profit Asset Recovery <recovery@operationprofitllc.com>";
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,7 +23,7 @@ export async function POST(req: NextRequest) {
     if (!name || !email || !message) {
       return NextResponse.json(
         { error: "Name, email, and message are required." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -27,7 +31,7 @@ export async function POST(req: NextRequest) {
     if (!emailRegex.test(email)) {
       return NextResponse.json(
         { error: "Please provide a valid email address." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -42,8 +46,8 @@ export async function POST(req: NextRequest) {
         html: confirmationHtml(params),
       }),
       resend.emails.send({
-        from: FROM_ADDRESS,
-        to: ADMIN_EMAIL,
+        from: ADMIN_EMAIL,
+        to: FROM_ADDRESS,
         reply_to: email,
         subject: adminSubject(name),
         html: adminHtml(params),
@@ -55,7 +59,7 @@ export async function POST(req: NextRequest) {
     console.error("Contact form error:", error);
     return NextResponse.json(
       { error: "Failed to send message. Please try again." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
